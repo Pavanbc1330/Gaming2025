@@ -15,4 +15,4 @@ const CONFIG = {
 WORDS DATA STRUCTURE
 10 levels, each level is an array of {word, correct, choices}
 Choices include the correct meaning and distractors.
-You can replace words or definitions as needed
+You can replace words or definitions as needed*/
