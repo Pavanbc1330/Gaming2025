@@ -1,0 +1,867 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Vocabulary Master</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px solid #ffffff;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 3em;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #cccccc;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #ffffff;
+            color: #000000;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .letter-box {
+            aspect-ratio: 1;
+            background: #ffffff;
+            color: #000000;
+            border: 3px solid #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .letter-box:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .letter-box.completed {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .letter-box.current {
+            background: #000000;
+            color: #ffffff;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.8); }
+        }
+
+        .word-card {
+            background: #ffffff;
+            color: #000000;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .word-header {
+            border-bottom: 3px solid #000000;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .word-title {
+            font-size: 3.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .word-level {
+            font-size: 1em;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .word-content {
+            margin: 25px 0;
+        }
+
+        .word-section {
+            margin: 20px 0;
+        }
+
+        .section-label {
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #666666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .section-text {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #000000;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .voice-btn {
+            flex: 1;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .voice-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: #000000;
+            color: #ffffff;
+            border: 3px solid #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: scale(1.05);
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            color: #000000;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .quiz-header {
+            text-align: center;
+            border-bottom: 3px solid #000000;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .quiz-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quiz-progress {
+            font-size: 1.2em;
+            color: #666666;
+        }
+
+        .question-card {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            border: 3px solid #000000;
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .quiz-option {
+            background: #ffffff;
+            color: #000000;
+            border: 3px solid #000000;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        .quiz-option.correct {
+            background: #4CAF50;
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+
+        .quiz-option.wrong {
+            background: #f44336;
+            color: #ffffff;
+            border-color: #f44336;
+        }
+
+        .results-container {
+            background: #ffffff;
+            color: #000000;
+            border-radius: 15px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .results-title {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .final-score {
+            font-size: 5em;
+            font-weight: bold;
+            margin: 30px 0;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .grade-display {
+            font-size: 4em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+
+        .results-feedback {
+            font-size: 1.5em;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .progress-indicator {
+            width: 100%;
+            height: 10px;
+            background: #333333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ffffff;
+            transition: width 0.5s ease;
+        }
+
+        .level-indicator {
+            background: #ffffff;
+            color: #000000;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>ALPHABET VOCABULARY MASTER</h1>
+            <div class="subtitle">Learn Through Letters</div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-label">LEVEL</div>
+                <div class="stat-value" id="levelDisplay">1</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">SCORE</div>
+                <div class="stat-value" id="scoreDisplay">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">WORDS LEARNED</div>
+                <div class="stat-value" id="wordsDisplay">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">PROGRESS</div>
+                <div class="stat-value" id="progressDisplay">0%</div>
+            </div>
+        </div>
+
+        <div id="gameArea"></div>
+    </div>
+
+    <script>
+        // Comprehensive vocabulary database organized by level and alphabet
+        const vocabularyDatabase = {
+            1: { // Level 1-3: Simple words
+                A: {word: "Apple", meaning: "A round fruit with red or green skin", example: "I eat an apple every morning for breakfast.", level: "Beginner"},
+                B: {word: "Ball", meaning: "A round object used in games and sports", example: "The children played with a colorful ball in the park.", level: "Beginner"},
+                C: {word: "Cat", meaning: "A small furry pet animal that says meow", example: "My cat likes to sleep on the cozy sofa.", level: "Beginner"},
+                D: {word: "Dog", meaning: "A loyal pet animal that barks", example: "The friendly dog wagged its tail happily.", level: "Beginner"},
+                E: {word: "Egg", meaning: "An oval object that chickens lay", example: "She cooked scrambled eggs for breakfast.", level: "Beginner"},
+                F: {word: "Fish", meaning: "An animal that lives and swims in water", example: "Colorful fish swim in the aquarium.", level: "Beginner"},
+                G: {word: "Garden", meaning: "A piece of ground for growing flowers or vegetables", example: "Beautiful roses bloom in our garden.", level: "Beginner"},
+                H: {word: "House", meaning: "A building where people live", example: "They bought a new house near the lake.", level: "Beginner"},
+                I: {word: "Ice", meaning: "Frozen water that is cold and hard", example: "We put ice cubes in our cold drinks.", level: "Beginner"},
+                J: {word: "Jump", meaning: "To push yourself off the ground using your legs", example: "The kids love to jump on the trampoline.", level: "Beginner"},
+                K: {word: "King", meaning: "A male ruler of a country", example: "The wise king ruled the kingdom fairly.", level: "Beginner"},
+                L: {word: "Lamp", meaning: "A device that produces light", example: "She turned on the lamp to read her book.", level: "Beginner"},
+                M: {word: "Moon", meaning: "The natural satellite that orbits Earth", example: "The full moon shines brightly at night.", level: "Beginner"},
+                N: {word: "Nest", meaning: "A structure built by birds to lay eggs", example: "The bird built a cozy nest in the tree.", level: "Beginner"},
+                O: {word: "Ocean", meaning: "A very large area of sea water", example: "We watched dolphins playing in the ocean.", level: "Beginner"},
+                P: {word: "Park", meaning: "A public area with grass and trees for recreation", example: "Families enjoy picnics in the park.", level: "Beginner"},
+                Q: {word: "Queen", meaning: "A female ruler of a country", example: "The elegant queen wore a golden crown.", level: "Beginner"},
+                R: {word: "Rain", meaning: "Water falling from clouds in drops", example: "We stayed inside because of the heavy rain.", level: "Beginner"},
+                S: {word: "Sun", meaning: "The star that gives Earth heat and light", example: "The bright sun warmed the summer day.", level: "Beginner"},
+                T: {word: "Tree", meaning: "A tall plant with a wooden trunk and branches", example: "Birds nest in the tall oak tree.", level: "Beginner"},
+                U: {word: "Umbrella", meaning: "A device used to protect from rain", example: "Don't forget your umbrella when it rains.", level: "Beginner"},
+                V: {word: "Violin", meaning: "A musical instrument with strings", example: "She plays the violin beautifully.", level: "Beginner"},
+                W: {word: "Water", meaning: "A clear liquid essential for life", example: "Drink plenty of water to stay healthy.", level: "Beginner"},
+                X: {word: "Xylophone", meaning: "A musical instrument with wooden bars", example: "The child played a tune on the xylophone.", level: "Beginner"},
+                Y: {word: "Yellow", meaning: "A bright color like the sun", example: "She wore a beautiful yellow dress.", level: "Beginner"},
+                Z: {word: "Zoo", meaning: "A place where animals are kept for people to see", example: "We saw lions and elephants at the zoo.", level: "Beginner"}
+            },
+            4: { // Level 4-6: Intermediate words
+                A: {word: "Achieve", meaning: "To successfully reach a goal or complete something", example: "With hard work, you can achieve your dreams.", level: "Intermediate"},
+                B: {word: "Brilliant", meaning: "Exceptionally clever or talented", example: "She had a brilliant idea to solve the problem.", level: "Intermediate"},
+                C: {word: "Curious", meaning: "Eager to know or learn something", example: "Curious children ask many questions about the world.", level: "Intermediate"},
+                D: {word: "Determine", meaning: "To decide or establish something firmly", example: "Scientists determine facts through careful research.", level: "Intermediate"},
+                E: {word: "Enhance", meaning: "To improve the quality or value of something", example: "Music can enhance your mood and productivity.", level: "Intermediate"},
+                F: {word: "Fortunate", meaning: "Lucky or favored by circumstances", example: "We were fortunate to find seats at the concert.", level: "Intermediate"},
+                G: {word: "Genuine", meaning: "Real, authentic, and sincere", example: "His apology seemed genuine and heartfelt.", level: "Intermediate"},
+                H: {word: "Harmony", meaning: "A pleasing combination or agreement", example: "The choir sang in perfect harmony.", level: "Intermediate"},
+                I: {word: "Inspire", meaning: "To fill someone with motivation or creativity", example: "Great teachers inspire students to learn.", level: "Intermediate"},
+                J: {word: "Journey", meaning: "An act of traveling from one place to another", example: "Their journey across the country took three weeks.", level: "Intermediate"},
+                K: {word: "Knowledge", meaning: "Facts and information acquired through experience", example: "Reading books expands your knowledge greatly.", level: "Intermediate"},
+                L: {word: "Loyalty", meaning: "Faithful support or allegiance", example: "Dogs are known for their loyalty to owners.", level: "Intermediate"},
+                M: {word: "Maintain", meaning: "To keep something in good condition", example: "Regular exercise helps maintain good health.", level: "Intermediate"},
+                N: {word: "Navigate", meaning: "To find your way or direct a course", example: "Sailors use stars to navigate the ocean.", level: "Intermediate"},
+                O: {word: "Observe", meaning: "To watch carefully and notice details", example: "Scientists observe nature to make discoveries.", level: "Intermediate"},
+                P: {word: "Persist", meaning: "To continue firmly despite difficulties", example: "If you persist, you will eventually succeed.", level: "Intermediate"},
+                Q: {word: "Quality", meaning: "The standard of excellence of something", example: "This restaurant is known for quality food.", level: "Intermediate"},
+                R: {word: "Resilient", meaning: "Able to recover quickly from difficulties", example: "Resilient people bounce back from setbacks.", level: "Intermediate"},
+                S: {word: "Sophisticated", meaning: "Complex, refined, or cultured", example: "The software uses sophisticated algorithms.", level: "Intermediate"},
+                T: {word: "Transform", meaning: "To change completely in form or appearance", example: "Education can transform a person's life.", level: "Intermediate"},
+                U: {word: "Unanimous", meaning: "Fully in agreement", example: "The committee reached a unanimous decision.", level: "Intermediate"},
+                V: {word: "Virtuous", meaning: "Having high moral standards", example: "She was admired for her virtuous character.", level: "Intermediate"},
+                W: {word: "Wisdom", meaning: "The quality of having experience and good judgment", example: "With age often comes wisdom and understanding.", level: "Intermediate"},
+                X: {word: "Xenial", meaning: "Hospitable and friendly to guests", example: "The xenial host made everyone feel welcome.", level: "Intermediate"},
+                Y: {word: "Yearn", meaning: "To have an intense desire for something", example: "After months away, she yearned to go home.", level: "Intermediate"},
+                Z: {word: "Zealous", meaning: "Having great energy and enthusiasm", example: "She was zealous about environmental protection.", level: "Intermediate"}
+            },
+            7: { // Level 7-9: Advanced words
+                A: {word: "Ambiguous", meaning: "Having more than one possible meaning or interpretation", example: "The politician's ambiguous statement confused voters.", level: "Advanced"},
+                B: {word: "Benevolent", meaning: "Well-meaning and kindly in nature", example: "The benevolent donor helped many charities.", level: "Advanced"},
+                C: {word: "Conundrum", meaning: "A confusing and difficult problem or question", example: "Climate change presents a global conundrum.", level: "Advanced"},
+                D: {word: "Diligent", meaning: "Showing careful and persistent work", example: "Diligent students consistently achieve high grades.", level: "Advanced"},
+                E: {word: "Ephemeral", meaning: "Lasting for a very short time", example: "Fame can be ephemeral in the entertainment industry.", level: "Advanced"},
+                F: {word: "Fastidious", meaning: "Very attentive to detail and accuracy", example: "The fastidious editor caught every tiny error.", level: "Advanced"},
+                G: {word: "Gregarious", meaning: "Fond of company and sociable", example: "His gregarious nature made him popular at parties.", level: "Advanced"},
+                H: {word: "Haughty", meaning: "Arrogantly superior and disdainful", example: "Her haughty attitude alienated her colleagues.", level: "Advanced"},
+                I: {word: "Immutable", meaning: "Unchanging over time or unable to be changed", example: "The laws of physics are considered immutable.", level: "Advanced"},
+                J: {word: "Juxtapose", meaning: "To place close together for contrasting effect", example: "The artist juxtaposed modern and classical styles.", level: "Advanced"},
+                K: {word: "Kinetic", meaning: "Relating to or resulting from motion", example: "Kinetic energy increases with velocity.", level: "Advanced"},
+                L: {word: "Loquacious", meaning: "Tending to talk a great deal", example: "The loquacious guest dominated the conversation.", level: "Advanced"},
+                M: {word: "Meticulous", meaning: "Showing great attention to detail", example: "The surgeon's meticulous work saved lives.", level: "Advanced"},
+                N: {word: "Nefarious", meaning: "Wicked or criminal in nature", example: "The villain's nefarious plot was finally exposed.", level: "Advanced"},
+                O: {word: "Ostentatious", meaning: "Designed to impress or attract notice", example: "His ostentatious display of wealth was embarrassing.", level: "Advanced"},
+                P: {word: "Pragmatic", meaning: "Dealing with things sensibly and realistically", example: "We need a pragmatic approach to solve this.", level: "Advanced"},
+                Q: {word: "Quintessential", meaning: "Representing the most perfect example", example: "She is the quintessential professional leader.", level: "Advanced"},
+                R: {word: "Recalcitrant", meaning: "Stubbornly resistant to authority or control", example: "The recalcitrant student refused to cooperate.", level: "Advanced"},
+                S: {word: "Surreptitious", meaning: "Kept secret, especially because it would not be approved", example: "He took a surreptitious glance at his phone.", level: "Advanced"},
+                T: {word: "Tenacious", meaning: "Persistent and determined", example: "Her tenacious spirit helped her overcome obstacles.", level: "Advanced"},
+                U: {word: "Ubiquitous", meaning: "Present, appearing, or found everywhere", example: "Smartphones have become ubiquitous in modern society.", level: "Advanced"},
+                V: {word: "Vicarious", meaning: "Experienced through someone else's actions", example: "She got vicarious pleasure from her children's success.", level: "Advanced"},
+                W: {word: "Whimsical", meaning: "Playfully quaint or fanciful", example: "The garden had a whimsical fairy-tale design.", level: "Advanced"},
+                X: {word: "Xenophobia", meaning: "Dislike or prejudice against people from other countries", example: "Education helps combat xenophobia and intolerance.", level: "Advanced"},
+                Y: {word: "Yielding", meaning: "Giving way under pressure or compliant", example: "The yielding material absorbed the impact well.", level: "Advanced"},
+                Z: {word: "Zenith", meaning: "The highest point or peak", example: "The artist reached the zenith of her career.", level: "Advanced"}
+            },
+            10: { // Level 10: Expert with idioms
+                A: {word: "Anomaly", meaning: "Something that deviates from what is standard or expected", example: "The warm winter weather was an anomaly for the region.", level: "Expert"},
+                B: {word: "Break the ice", meaning: "To initiate conversation in a social setting", example: "He told a joke to break the ice at the meeting.", level: "Expert - Idiom"},
+                C: {word: "Cogent", meaning: "Clear, logical, and convincing", example: "She presented a cogent argument for the policy change.", level: "Expert"},
+                D: {word: "Devil's advocate", meaning: "Someone who argues against an idea to test it", example: "Let me play devil's advocate and challenge your theory.", level: "Expert - Idiom"},
+                E: {word: "Elucidate", meaning: "To make something clear and easy to understand", example: "The professor elucidated the complex theory brilliantly.", level: "Expert"},
+                F: {word: "Face the music", meaning: "To accept consequences of one's actions", example: "After the mistake, he had to face the music.", level: "Expert - Idiom"},
+                G: {word: "Galvanize", meaning: "To shock or excite into taking action", example: "The speech galvanized the community into action.", level: "Expert"},
+                H: {word: "Hit the nail on the head", meaning: "To describe exactly what is causing a situation", example: "Your analysis really hit the nail on the head.", level: "Expert - Idiom"},
+                I: {word: "Inexorable", meaning: "Impossible to stop or prevent", example: "The inexorable march of technology continues.", level: "Expert"},
+                J: {word: "Jump on the bandwagon", meaning: "To join others in doing something popular", example: "Everyone jumped on the bandwagon after its success.", level: "Expert - Idiom"},
+                K: {word: "Kafkaesque", meaning: "Nightmarishly complex and illogical", example: "The bureaucratic process was utterly Kafkaesque.", level: "Expert"},
+                L: {word: "Let the cat out of the bag", meaning: "To reveal a secret accidentally", example: "He let the cat out of the bag about the surprise.", level: "Expert - Idiom"},
+                M: {word: "Machiavellian", meaning: "Cunning and scheming in politics or business", example: "His Machiavellian tactics secured him power.", level: "Expert"},
+                N: {word: "Nip in the bud", meaning: "To stop something at an early stage", example: "We must nip this problem in the bud immediately.", level: "Expert - Idiom"},
+                O: {word: "Obfuscate", meaning: "To make something unclear or difficult to understand", example: "The report seemed designed to obfuscate the truth.", level: "Expert"},
+                P: {word: "Piece of cake", meaning: "Something very easy to do", example: "The exam was a piece of cake for her.", level: "Expert - Idiom"},
+                Q: {word: "Quixotic", meaning: "Extremely idealistic and unrealistic", example: "His quixotic quest for perfection was admirable but futile.", level: "Expert"},
+                R: {word: "Rain on someone's parade", meaning: "To spoil someone's plans or excitement", example: "I hate to rain on your parade, but that won't work.", level: "Expert - Idiom"},
+                S: {word: "Sycophant", meaning: "A person who acts obsequiously to gain advantage", example: "The sycophant constantly flattered the boss.", level: "Expert"},
+                T: {word: "The ball is in your court", meaning: "It is your turn to take action or make a decision", example: "I've done my part; the ball is in your court now.", level: "Expert - Idiom"},
+                U: {word: "Unequivocal", meaning: "Leaving no doubt; clear and unambiguous", example: "Her unequivocal statement settled the matter.", level: "Expert"},
+                V: {word: "Vet", meaning: "To examine something carefully for accuracy", example: "We need to vet all candidates thoroughly.", level: "Expert"},
+                W: {word: "Wrap your head around", meaning: "To understand something complex or strange", example: "I can't wrap my head around quantum physics.", level: "Expert - Idiom"},
+                X: {word: "X marks the spot", meaning: "Indicates the exact location of something", example: "On the treasure map, X marks the spot.", level: "Expert - Idiom"},
+                Y: {word: "Your guess is as good as mine", meaning: "I don't know the answer either", example: "When will it rain? Your guess is as good as mine.", level: "Expert - Idiom"},
+                Z: {word: "Zero in on", meaning: "To focus attention on something specific", example: "Let's zero in on the main issue here.", level: "Expert - Idiom"}
+            }
+        };
+
+        // Quiz questions
+        const quizQuestions = [
+            {question: "What does 'ephemeral' mean?", options: ["Permanent", "Lasting briefly", "Ancient", "Powerful"], correct: 1, word: "ephemeral"},
+            {question: "Choose the meaning of 'ubiquitous':", options: ["Rare", "Found everywhere", "Hidden", "Expensive"], correct: 1, word: "ubiquitous"},
+            {question: "What does 'juxtapose' mean?", options: ["Separate", "Place side by side", "Combine", "Remove"], correct: 1, word: "juxtapose"},
+            {question: "What does 'break the ice' mean?", options: ["Damage something", "Start conversation", "Feel cold", "Make tea"], correct: 1, word: "break the ice"},
+            {question: "Choose the meaning of 'resilient':", options: ["Fragile", "Able to recover", "Rigid", "Weak"], correct: 1, word: "resilient"},
+            {question: "What does 'meticulous' mean?", options: ["Careless", "Detailed and careful", "Quick", "Lazy"], correct: 1, word: "meticulous"},
+            {question: "What does 'face the music' mean?", options: ["Listen to songs", "Accept consequences", "Dance", "Sing"], correct: 1, word: "face the music"},
+            {question: "Choose the meaning of 'benevolent':", options: ["Evil", "Kind and generous", "Angry", "Indifferent"], correct: 1, word: "benevolent"},
+            {question: "What does 'pragmatic' mean?", options: ["Idealistic", "Practical and realistic", "Emotional", "Confused"], correct: 1, word: "pragmatic"},
+            {question: "What does 'hit the nail on the head' mean?", options: ["Build something", "Be exactly right", "Make mistake", "Use hammer"], correct: 1, word: "hit the nail on the head"},
+            {question: "Choose the meaning of 'ambiguous':", options: ["Clear", "Having multiple meanings", "Simple", "Direct"], correct: 1, word: "ambiguous"},
+            {question: "What does 'piece of cake' mean?", options: ["Dessert", "Very easy", "Very hard", "Expensive"], correct: 1, word: "piece of cake"},
+            {question: "Choose the meaning of 'tenacious':", options: ["Weak", "Persistent", "Giving up", "Lazy"], correct: 1, word: "tenacious"},
+            {question: "What does 'the ball is in your court' mean?", options: ["Play sports", "Your turn to act", "Watch game", "Buy ball"], correct: 1, word: "the ball is in your court"},
+            {question: "Choose the meaning of 'gregarious':", options: ["Antisocial", "Sociable", "Angry", "Quiet"], correct: 1, word: "gregarious"}
+        ];
+
+        // Game state
+        let currentLevel = 1;
+        let score = 0;
+        let wordsLearned = 0;
+        let completedLetters = new Set();
+        let currentLetter = null;
+        let quizScore = 0;
+        let currentQuizIndex = 0;
+        let totalWords = 0;
+
+        // Calculate total words
+        for (let level in vocabularyDatabase) {
+            totalWords += 26; // 26 letters per level
+        }
+
+        function initGame() {
+            showAlphabetGrid();
+        }
+
+        function showAlphabetGrid() {
+            const gameArea = document.getElementById('gameArea');
+            const levelGroup = getLevelGroup(currentLevel);
+            const vocab = vocabularyDatabase[levelGroup];
+
+            gameArea.innerHTML = `
+                <div class="level-indicator">
+                    LEVEL ${currentLevel} - ${getLevelName(currentLevel)}
+                </div>
+                <div class="alphabet-grid" id="alphabetGrid"></div>
+                <div class="progress-indicator">
+                    <div class="progress-fill" id="levelProgress"></div>
+                </div>
+            `;
+
+            const grid = document.getElementById('alphabetGrid');
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+            alphabet.forEach(letter => {
+                const box = document.createElement('div');
+                box.className = 'letter-box';
+                if (completedLetters.has(letter)) {
+                    box.classList.add('completed');
+                }
+                box.textContent = letter;
+                box.onclick = () => showWordCard(letter);
+                grid.appendChild(box);
+            });
+
+            updateLevelProgress();
+        }
+
+        function getLevelGroup(level) {
+            if (level <= 3) return 1;
+            if (level <= 6) return 4;
+            if (level <= 9) return 7;
+            return 10;
+        }
+
+        function getLevelName(level) {
+            if (level <= 3) return "BEGINNER";
+            if (level <= 6) return "INTERMEDIATE";
+            if (level <= 9) return "ADVANCED";
+            return "EXPERT";
+        }
+
+        function showWordCard(letter) {
+            currentLetter = letter;
+            const levelGroup = getLevelGroup(currentLevel);
+            const wordData = vocabularyDatabase[levelGroup][letter];
+            const gameArea = document.getElementById('gameArea');
+
+            gameArea.innerHTML = `
+                <div class="word-card">
+                    <div class="word-header">
+                        <div class="word-title">${wordData.word}</div>
+                        <div class="word-level">${wordData.level}</div>
+                    </div>
+                    <div class="word-content">
+                        <div class="word-section">
+                            <div class="section-label">MEANING</div>
+                            <div class="section-text">${wordData.meaning}</div>
+                        </div>
+                        <div class="word-section">
+                            <div class="section-label">EXAMPLE</div>
+                            <div class="section-text">"${wordData.example}"</div>
+                        </div>
+                    </div>
+                    <div class="voice-controls">
+                        <button class="voice-btn" onclick="speakWord('${wordData.word}')">
+                            🔊 PRONOUNCE
+                        </button>
+                        <button class="voice-btn" onclick="speakMeaning('${wordData.meaning}')">
+                            🔊 MEANING
+                        </button>
+                        <button class="voice-btn" onclick="speakExample('${wordData.example}')">
+                            🔊 EXAMPLE
+                        </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-primary" onclick="markAsLearned()">
+                            MARK AS LEARNED
+                        </button>
+                        <button class="btn-primary" onclick="showAlphabetGrid()">
+                            BACK TO GRID
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function markAsLearned() {
+            if (!completedLetters.has(currentLetter)) {
+                completedLetters.add(currentLetter);
+                wordsLearned++;
+                score += 10;
+                updateStats();
+                speakText('Word learned successfully!');
+
+                if (completedLetters.size === 26) {
+                    if (currentLevel < 10) {
+                        setTimeout(() => levelComplete(), 1000);
+                    } else {
+                        setTimeout(() => startQuiz(), 1000);
+                    }
+                } else {
+                    showAlphabetGrid();
+                }
+            } else {
+                showAlphabetGrid();
+            }
+        }
+
+        function levelComplete() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="results-container">
+                    <div class="results-title">LEVEL ${currentLevel} COMPLETE!</div>
+                    <div class="final-score">${score}</div>
+                    <div class="results-feedback">
+                        Excellent work! You've mastered all 26 words!
+                    </div>
+                    <div class="results-feedback">
+                        Words learned: ${wordsLearned}
+                    </div>
+                    <button class="btn-primary" onclick="nextLevel()">
+                        CONTINUE TO LEVEL ${currentLevel + 1}
+                    </button>
+                </div>
+            `;
+            speakText(`Level ${currentLevel} complete! Advancing to next level.`);
+        }
+
+        function nextLevel() {
+            currentLevel++;
+            completedLetters.clear();
+            updateStats();
+            showAlphabetGrid();
+        }
+
+        function startQuiz() {
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="results-container">
+                    <div class="results-title">🎓 CONGRATULATIONS!</div>
+                    <div class="results-feedback">
+                        You've completed all 10 levels!<br>
+                        Now it's time for the FINAL QUIZ!
+                    </div>
+                    <button class="btn-primary" onclick="showQuizQuestion()">
+                        START FINAL QUIZ
+                    </button>
+                </div>
+            `;
+            speakText('Congratulations! You have completed all levels. Time for the final quiz!');
+        }
+
+        function showQuizQuestion() {
+            if (currentQuizIndex >= quizQuestions.length) {
+                showFinalResults();
+                return;
+            }
+
+            const question = quizQuestions[currentQuizIndex];
+            const gameArea = document.getElementById('gameArea');
+
+            gameArea.innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <div class="quiz-title">FINAL QUIZ</div>
+                        <div class="quiz-progress">
+                            Question ${currentQuizIndex + 1} of ${quizQuestions.length} | Score: ${quizScore}/30
+                        </div>
+                    </div>
+                    <div class="question-card">
+                        <div class="question-text">${question.question}</div>
+                        <button class="voice-btn" onclick="speakQuestion('${question.question}')">
+                            🔊 READ QUESTION
+                        </button>
+                    </div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                </div>
+            `;
+
+            const optionsDiv = document.getElementById('quizOptions');
+            question.options.forEach((option, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.onclick = () => checkQuizAnswer(index, question.correct);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(selected, correct) {
+            const buttons = document.querySelectorAll('.quiz-option');
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                buttons[selected].classList.add('correct');
+                quizScore += 2;
+                speakText('Correct!');
+            } else {
+                buttons[selected].classList.add('wrong');
+                buttons[correct].classList.add('correct');
+                quizScore -= 1;
+                speakText('Wrong answer. The correct answer is highlighted.');
+            }
+
+            setTimeout(() => {
+                currentQuizIndex++;
+                showQuizQuestion();
+            }, 2000);
+        }
+
+        function showFinalResults() {
+            const totalScore = score + quizScore;
+            const percentage = (quizScore / 30 * 100).toFixed(1);
+            let grade, feedback;
+
+            if (percentage >= 90) {
+                grade = 'A+';
+                feedback = 'OUTSTANDING! You are a vocabulary master!';
+            } else if (percentage >= 80) {
+                grade = 'A';
+                feedback = 'EXCELLENT! Your vocabulary skills are superb!';
+            } else if (percentage >= 70) {
+                grade = 'B';
+                feedback = 'GOOD JOB! Keep practicing to improve!';
+            } else if (percentage >= 60) {
+                grade = 'C';
+                feedback = 'FAIR! Review the words and try again!';
+            } else {
+                grade = 'D';
+                feedback = 'KEEP LEARNING! Practice makes perfect!';
+            }
+
+            const gameArea = document.getElementById('gameArea');
+            gameArea.innerHTML = `
+                <div class="results-container">
+                    <div class="results-title">🏆 GAME COMPLETE</div>
+                    <div class="final-score">${totalScore}</div>
+                    <div class="grade-display">${grade}</div>
+                    <div class="results-feedback">
+                        Total Score: ${totalScore} points<br>
+                        Quiz Score: ${quizScore} / 30<br>
+                        Percentage: ${percentage}%<br>
+                        Words Learned: ${wordsLearned}
+                    </div>
+                    <div class="results-feedback" style="font-size: 1.8em; margin-top: 20px;">
+                        ${feedback}
+                    </div>
+                    <button class="btn-primary" onclick="location.reload()">
+                        PLAY AGAIN
+                    </button>
+                </div>
+            `;
+
+            speakText(`Game complete! Your final score is ${totalScore} points. ${feedback}`);
+        }
+
+        function updateStats() {
+            document.getElementById('levelDisplay').textContent = currentLevel;
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('wordsDisplay').textContent = wordsLearned;
+            const progress = (wordsLearned / totalWords * 100).toFixed(1);
+            document.getElementById('progressDisplay').textContent = progress + '%';
+        }
+
+        function updateLevelProgress() {
+            const progress = (completedLetters.size / 26 * 100);
+            const progressBar = document.getElementById('levelProgress');
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
+        }
+
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.rate = 0.7;
+            utterance.pitch = 1;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakMeaning(meaning) {
+            const utterance = new SpeechSynthesisUtterance(meaning);
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakExample(example) {
+            const utterance = new SpeechSynthesisUtterance(example);
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakQuestion(question) {
+            const utterance = new SpeechSynthesisUtterance(question);
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
