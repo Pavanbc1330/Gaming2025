@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake & Ladder Game</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- Landing Page -->
+    <div id="landing" class="screen">
+        <h1 class="title">🐍 Snake & Ladder 🎲</h1>
+        <button class="start-btn" onclick="showPlayerForm()">Start Game</button>
+    </div>
+
+    <!-- Player Setup Page -->
+    <div id="player-setup" class="screen hidden">
+        <h2>Enter Player Names (Max 4)</h2>
+
+        <div id="players-input"></div>
+
+        <button onclick="addPlayer()">Add Player</button>
+        <button onclick="startGame()">Begin Game</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="hidden">
+        <div id="board"></div>
+
+        <div id="sidebar">
+            <h2>Players</h2>
+            <ul id="players-list"></ul>
+
+            <button id="rollDiceBtn" onclick="rollDice()">Roll Dice</button>
+            <p id="dice-result"></p>
+            <p id="turn-info"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
