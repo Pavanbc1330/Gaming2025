@@ -1,43 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Snake & Ladder Game</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vocab Quest — Learn English by Playing</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>Vocab Quest</h1>
+    <p>Learn English vocabulary through fun levels and a final test.</p>
+  </header>
 
-    <!-- Landing Page -->
-    <div id="landing" class="screen">
-        <h1 class="title">🐍 Snake & Ladder 🎲</h1>
-        <button class="start-btn" onclick="showPlayerForm()">Start Game</button>
-    </div>
+  <main>
+    <section id="level-panel" class="card">
+      <h2>Levels</h2>
+      <div id="levels-container" class="levels-grid"></div>
+      <button id="reset-progress" class="secondary">Reset progress</button>
+    </section>
 
-    <!-- Player Setup Page -->
-    <div id="player-setup" class="screen hidden">
-        <h2>Enter Player Names (Max 4)</h2>
+    <section id="game-panel" class="card hidden">
+      <div class="game-header">
+        <h2 id="game-title">Level 1</h2>
+        <div id="progress-info">Question <span id="current-q">1</span> / <span id="total-q">10</span></div>
+      </div>
 
-        <div id="players-input"></div>
+      <div id="word-card">
+        <div id="word-text" class="word">Word</div>
+        <div id="choices" class="choices"></div>
+      </div>
 
-        <button onclick="addPlayer()">Add Player</button>
-        <button onclick="startGame()">Begin Game</button>
-    </div>
+      <div class="game-footer">
+        <div id="score-display">Score: <span id="score">0</span></div>
+        <button id="quit" class="secondary">Quit</button>
+      </div>
+    </section>
 
-    <!-- Game Screen -->
-    <div id="game-screen" class="hidden">
-        <div id="board"></div>
+    <section id="result-panel" class="card hidden">
+      <h2 id="result-title">Level Complete</h2>
+      <p id="result-message"></p>
+      <p id="result-score"></p>
+      <div id="result-actions"></div>
+    </section>
+  </main>
 
-        <div id="sidebar">
-            <h2>Players</h2>
-            <ul id="players-list"></ul>
+  <footer>
+    <small>Made for learning — customize the words in app.js</small>
+  </footer>
 
-            <button id="rollDiceBtn" onclick="rollDice()">Roll Dice</button>
-            <p id="dice-result"></p>
-            <p id="turn-info"></p>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
